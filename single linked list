@@ -1,0 +1,84 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int bookID;
+    struct Node* next;
+};
+
+struct Node* head = NULL;
+
+void insert_at_beginning(int id) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (newNode == NULL) return;
+    newNode->bookID = id;
+    newNode->next = head; 
+    head = newNode;    
+}
+
+void insert_at_end(int id) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (newNode == NULL) return;
+    newNode->bookID = id;
+    newNode->next = NULL;
+
+    if (head == NULL) {
+        head = newNode;
+        return;
+    }
+
+    struct Node* temp = head;
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+    temp->next = newNode;  
+}
+
+void delete_node(int id) {
+    struct Node *temp = head, *prev = NULL;
+
+    if (temp != NULL && temp->bookID == id) {
+        head = temp->next;
+        free(temp);
+        return;
+    }
+
+    while (temp != NULL && temp->bookID != id) {
+        prev = temp;
+        temp = temp->next;
+    }
+
+    if (temp != NULL) {
+        prev->next = temp->next;
+        free(temp);
+    }
+}
+
+void traverse() {
+    struct Node* temp = head;
+    if (temp == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    printf("Issued Books: ");
+    while (temp != NULL) {
+        printf("%d -> ", temp->bookID);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+int main() {
+    insert_at_end(100);      
+    insert_at_end(18);       
+    insert_at_beginning(17);
+    
+    printf("After adding books:\n");
+    traverse();            
+    
+    printf("\nAfter returning book 100:\n");
+    delete_node(100);         
+    traverse();              
+
+    return 0;
+}
